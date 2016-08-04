@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="https://identio.github.io/img/logo-small.png">
+
+    <title>Ident.io</title>
+
+    
+    <link href="https://identio.github.io/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://identio.github.io/css/bootstrap-callout.css" rel="stylesheet">
+    <link href="https://identio.github.io/css/highlightjs/default.min.css" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://identio.github.io/css/toc.css">
+    <link href="https://identio.github.io/css/identio.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://identio.github.io/css/font-awesome.min.css">
+    
+    
+  </head>
+
+<body data-spy="scroll" data-target="#toc">
+      <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="https://identio.github.io/"><img alt="Brand" src="https://identio.github.io/img/logo-small.png" ></a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <p class="navbar-text navbar-right">
+            <a href="https://github.com/identio" class="navbar-link">
+              <i class="fa fa-github"></i>
+              Github
+            </a>
+          </p>
+
+        </div>
+      </div>
+    </nav>
+
+    
+<div class="container-fluid main-content">
+  <div class="row">
+    <div class="col-sm-3 col-lg-2">
+      <div class="menu" data-spy="affix" data-offset-top="0" data-offset-bottom="-100">
+        
+
+<ul>
+
+  
+  
+
+  <li>
+    
+        
+
+
+<a  title="Introduction" href="https://identio.github.io/docs/identio-server/">
+	
+	Introduction
+</a>
+
+      
+  </li>
+
+  
+
+  <li>
+    
+        
+
+
+<a class="current" title="Getting started" href="https://identio.github.io/docs/identio-server/getting-started/">
+	
+	Getting started
+</a>
+
+      
+  </li>
+
+  
+
+  <li>
+    
+        
+
+
+<a  title="Reference documentation" href="https://identio.github.io/docs/identio-server/reference/">
+	
+	Reference documentation
+</a>
+
+      
+  </li>
+
+
+</ul>
+
+      </div>
+    </div>
+    <div class="col-sm-9 col-lg-8">
+      
+
+<h1 id="getting-started">Getting started</h1>
+
+<p>This page will guide you through the installation process of a simple Identity Provider.</p>
+
+<div class="bs-callout bs-callout-warning">
+  <h4>Warning</h4>
+  
+Be aware that this setup is useful in a development or demo environment, but should not be used as-is
+in production.
+
+</div>
+
+
+<h2 id="pre-requisite">Pre-requisite</h2>
+
+<p>A Java 1.8+ Runtime Environment must be installed on your machine.</p>
+
+<p>Ensure that the time of your machine is synchronized through NTP.</p>
+
+<h2 id="installation">Installation</h2>
+
+<h3 id="ident-io-server-installation">Ident.io Server installation</h3>
+
+<p>You just need to download the <a href="https://github.com/identio/identio-server/releases">latest version</a>
+and unzip the content on the filesystem.</p>
+
+<h3 id="prepare-the-environment">Prepare the environment</h3>
+
+<p>Edit the configuration file <code>identio-config.yml</code> that can be found in the <code>config</code> directory and set
+the public hostname of your machine:</p>
+
+<pre><code class="language-yaml">globalConfiguration:
+  publicFqdn: http://&lt;your_hostname&gt;:10080
+</code></pre>
+
+<h3 id="start-the-server">Start the server</h3>
+
+<p>On UNIX systems:</p>
+
+<pre><code class="language-sh">bin/identio-server --identio.config=config/identio-config.yml
+</code></pre>
+
+<p>On Windows systems:</p>
+
+<pre><code class="language-sh">bin/identio-server.bat --identio.config=config\identio-config.yml
+</code></pre>
+
+<p>This will start a HTTP server listening on port 10080.</p>
+
+<h3 id="fetch-the-idp-metadata">Fetch the IDP metadata</h3>
+
+<p>The metadata of the Identity Provider can be fetched by accessing the URL <code>http://&lt;your_hostname&gt;:10080/SAML2</code></p>
+
+<h3 id="copy-the-service-provider-metadata">Copy the Service Provider Metadata</h3>
+
+<p>To configure a Service Provider, just copy the metadata of your Service Provider in the <code>config/trusted-sp</code> folder.
+Ident.io server periodically scans for new metadatas in this directory and will automatically load the file.</p>
+
+<h3 id="test-the-setup">Test the setup</h3>
+
+<p>Access your Service Provider and you should be redirected to Ident.io server.
+The sample configuration uses a local authentication file containing one test user.
+The login and password are <code>johndoe</code> / <code>password</code>.</p>
+
+   </div>
+    <div class="col-lg-2">
+      <div class="menu toc" id="toc" data-spy="affix" data-offset-top="0" data-offset-bottom="-100">
+        <nav id="toc" data-toggle="toc"></nav>
+
+      </div>
+    </div>
+  </div>
+
+</div> 
+
+<footer>
+  <p>&copy; 2016 Ident.io</p>
+</footer>
+
+
+
+<script src="https://identio.github.io/js/jquery.min.js"></script>
+<script src="https://identio.github.io/js/bootstrap.min.js"></script>
+
+<script src="https://identio.github.io/js/ie10-viewport-bug-workaround.js"></script>
+<script src="https://identio.github.io/js/highlightjs/highlight.min.js"></script>
+<script src="https://identio.github.io/js/highlightjs/yaml.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+<script src="https://identio.github.io/js/bootstrap-toc.min.js"></script>
+</body>
+</html>
+

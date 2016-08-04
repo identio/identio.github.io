@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="https://identio.github.io/img/logo-small.png">
+
+    <title>Ident.io</title>
+
+    
+    <link href="https://identio.github.io/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://identio.github.io/css/bootstrap-callout.css" rel="stylesheet">
+    <link href="https://identio.github.io/css/highlightjs/default.min.css" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://identio.github.io/css/toc.css">
+    <link href="https://identio.github.io/css/identio.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://identio.github.io/css/font-awesome.min.css">
+    
+    
+  </head>
+
+<body data-spy="scroll" data-target="#toc">
+      <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="https://identio.github.io/"><img alt="Brand" src="https://identio.github.io/img/logo-small.png" ></a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <p class="navbar-text navbar-right">
+            <a href="https://github.com/identio" class="navbar-link">
+              <i class="fa fa-github"></i>
+              Github
+            </a>
+          </p>
+
+        </div>
+      </div>
+    </nav>
+
+    
+<div class="container-fluid main-content">
+  <div class="row">
+    <div class="col-sm-3 col-lg-2">
+      <div class="menu" data-spy="affix" data-offset-top="0" data-offset-bottom="-100">
+        
+
+<ul>
+
+  
+  
+
+  <li>
+    
+        
+
+
+<a class="current" title="Introduction" href="https://identio.github.io/docs/identio-server/">
+	
+	Introduction
+</a>
+
+      
+  </li>
+
+  
+
+  <li>
+    
+        
+
+
+<a  title="Getting started" href="https://identio.github.io/docs/identio-server/getting-started/">
+	
+	Getting started
+</a>
+
+      
+  </li>
+
+  
+
+  <li>
+    
+        
+
+
+<a  title="Reference documentation" href="https://identio.github.io/docs/identio-server/reference/">
+	
+	Reference documentation
+</a>
+
+      
+  </li>
+
+
+</ul>
+
+      </div>
+    </div>
+    <div class="col-sm-9 col-lg-8">
+      
+
+<h1 id="ident-io-documentation">Ident.io documentation</h1>
+
+<h2 id="what-is-ident-io-server">What is Ident.io Server ?</h2>
+
+<p>Ident.io Server is a lightweight authentication and SSO server written in Java.
+It provides (for now) an implementation of a SAML 2.0 Identity Provider.
+It aims to be portable, simple to configure and performant.</p>
+
+<h2 id="features">Features</h2>
+
+<h3 id="flexible-authentication-policy">Flexible authentication policy</h3>
+
+<p>The aim of Ident.io Server is to decouple applications from authentication methods.
+Authentication methods evolve quickly, whereas security needs don&rsquo;t evolve that much.</p>
+
+<p>A complete authentication policy can be implemented depending on your needs, based
+on authentication levels.</p>
+
+<p>As an example, if a user accesses an application that requires a strong authentication,
+Ident.io Server will only propose authentication methods that satisfies this
+authentication level (One-Time Password, Smartcard, etc.).
+If the user accesses an application that requires a basic authentication, Ident.io
+won&rsquo;t ask the user to authenticate, as it is already strongly authenticated.</p>
+
+<h3 id="identity-proxying">Identity proxying</h3>
+
+<p>Ident.io Server is able to delegate authentication to an external SAML 2.0 provider
+as part of the user logon flow.
+Ident.io Server will enforce the authentication policy on this external providers.</p>
+
+<h3 id="flexible-architecture">Flexible architecture</h3>
+
+<p>Ident.io Server can be deployed in a variety of architectures depending on your needs,
+following a &ldquo;batteries included but removable&rdquo; design.</p>
+
+<p>It can be deployed as a standalone in-memory application on a developer workstation
+or as a full high-availability solution with load-balancing.</p>
+
+   </div>
+    <div class="col-lg-2">
+      <div class="menu toc" id="toc" data-spy="affix" data-offset-top="0" data-offset-bottom="-100">
+        <nav id="toc" data-toggle="toc"></nav>
+
+      </div>
+    </div>
+  </div>
+
+</div> 
+
+<footer>
+  <p>&copy; 2016 Ident.io</p>
+</footer>
+
+
+
+<script src="https://identio.github.io/js/jquery.min.js"></script>
+<script src="https://identio.github.io/js/bootstrap.min.js"></script>
+
+<script src="https://identio.github.io/js/ie10-viewport-bug-workaround.js"></script>
+<script src="https://identio.github.io/js/highlightjs/highlight.min.js"></script>
+<script src="https://identio.github.io/js/highlightjs/yaml.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+<script src="https://identio.github.io/js/bootstrap-toc.min.js"></script>
+</body>
+</html>
+

@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="https://identio.github.io/img/logo-small.png">
+
+    <title>Ident.io</title>
+
+    
+    <link href="https://identio.github.io/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://identio.github.io/css/bootstrap-callout.css" rel="stylesheet">
+    <link href="https://identio.github.io/css/highlightjs/default.min.css" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://identio.github.io/css/toc.css">
+    <link href="https://identio.github.io/css/identio.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://identio.github.io/css/font-awesome.min.css">
+    
+    
+  </head>
+
+<body data-spy="scroll" data-target="#toc">
+      <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="https://identio.github.io/"><img alt="Brand" src="https://identio.github.io/img/logo-small.png" ></a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <p class="navbar-text navbar-right">
+            <a href="https://github.com/identio" class="navbar-link">
+              <i class="fa fa-github"></i>
+              Github
+            </a>
+          </p>
+
+        </div>
+      </div>
+    </nav>
+
+    
+<div class="container-fluid main-content">
+  <div class="row">
+    <div class="col-sm-3 col-lg-2">
+      <div class="menu" data-spy="affix" data-offset-top="0" data-offset-bottom="-100">
+        
+
+<ul>
+
+  
+  
+
+  <li>
+    
+        
+
+
+<a  title="Introduction" href="https://identio.github.io/docs/identio-server/">
+	
+	Introduction
+</a>
+
+      
+  </li>
+
+  
+
+  <li>
+    
+        
+
+
+<a  title="Getting started" href="https://identio.github.io/docs/identio-server/getting-started/">
+	
+	Getting started
+</a>
+
+      
+  </li>
+
+  
+
+  <li>
+    
+        
+
+
+<a class="current" title="Reference documentation" href="https://identio.github.io/docs/identio-server/reference/">
+	
+	Reference documentation
+</a>
+
+      
+  </li>
+
+
+</ul>
+
+      </div>
+    </div>
+    <div class="col-sm-9 col-lg-8">
+      
+
+<h1 id="reference-documentation">Reference documentation</h1>
+
+<p>This page details the configuration options of Ident.io.
+The configuration is by default located in the file <code>identio-config.yml</code> in the <code>config</code>
+directory.</p>
+
+<div class="bs-callout bs-callout-warning">
+  <h4>Warning</h4>
+  
+As the configuration is a YAML file, be aware that the identation of each item is important.
+
+</div>
+
+
+<p>The configuration is split in 5 parts:</p>
+
+<ul>
+<li><strong>Global</strong>: technical configuration of the server (ports, url, etc.)</li>
+<li><strong>Authentication policy</strong>: configuration of the authentication policy to apply to authentication requests</li>
+<li><strong>SAML Identity Provider</strong>: configuration of the SAML Identity Provider</li>
+<li><strong>Session</strong>: configuration of the session storage</li>
+<li><strong>Authentication methods</strong>: configuration of the authentication methods that an user can use to authenticate</li>
+</ul>
+
+<h2 id="global-configuration">Global configuration</h2>
+
+<p>The global configuration is defined in the <code>globalConfiguration</code> section.</p>
+
+<h3 id="host-and-port">Host and port</h3>
+
+<ul>
+<li><code>port</code>: TCP port to open (default: <code>10080</code>).</li>
+<li><code>publicFqdn</code>: Public fully qualified domain name of the server. This is the url that end-users
+will use to access the authentication server.</li>
+<li><code>workDirectory</code>: A directory where the SSL Keystore of the embedded application
+server will be created (default: the directory hosting the configuration).</li>
+</ul>
+
+<h3 id="ssl-configuration">SSL configuration</h3>
+
+<p>As a pre-requisite to enable SSL, you have to generate a valid certificate in PKCS12 format.</p>
+
+<ul>
+<li><code>secure</code>: Set to <code>true</code> to enable SSL on the server (default: <code>false</code>).</li>
+<li><code>keystorePath</code>: Path to the PKCS12 file containing the SSL certificate for the server.</li>
+<li><code>keystorePassword</code>: Password of the PKCS12 file.</li>
+</ul>
+
+<h3 id="miscellaneous">Miscellaneous</h3>
+
+<ul>
+<li><code>staticResourcesPath</code>: Path to the static resources hosting the UI of Ident.io server. This option is useful
+if you want to customize the UI of the server (default: <code>ui</code> directory)</li>
+</ul>
+
+<h3 id="sample-configuration">Sample configuration</h3>
+
+<p>Here is a sample configuration for this section:</p>
+
+<pre><code class="language-yaml">globalConfiguration:
+  keystorePath: /opt/identio/config/idp.identio.net.p12
+  keystorePassword: password
+  port: 443
+  publicFqdn: https://idp.identio.net
+  secure: true
+  workDirectory: /opt/identio/config
+  staticResourcesPath: /opt/identio/ui
+</code></pre>
+
+<h2 id="authentication-policy-configuration">Authentication policy configuration</h2>
+
+<p>The authentication policy is defined in the <code>authPolicyConfiguration</code> section.</p>
+
+<h3 id="authentication-levels-configuration">Authentication levels configuration</h3>
+
+<p>The authentication levels are defined in the <code>authLevels</code> property.</p>
+
+<p>This is a list of the authentication levels you want to handle, ordered from the weakest to the strongest.
+Each item of the list start with an anchor (name prefixed with <code>&amp;</code>), in order to be used as a reference
+elsewhere in the configuration.</p>
+
+<p>Each authentication levels has two properties:</p>
+
+<ul>
+<li><code>name</code>: The internal name of the authentication level.</li>
+<li><code>urn</code>: A URN referencing this authentication level.</li>
+</ul>
+
+<h3 id="default-authentication-level-configuration">Default authentication level configuration</h3>
+
+<p>The default authentication level is defined in the <code>defaultAuthLevel</code> property.
+This authentication level is used by the authentication server when no information in the request
+is usable to determine which authentication level to apply.</p>
+
+<p>The default authentication level has two properties:</p>
+
+<ul>
+<li><code>authLevel</code>: A reference to a authentication level declared in the previous section.
+It must start with a <code>*</code> character (denoting a reference in YAML)</li>
+<li><code>comparison</code>: Used by the authentication server to determine which authentication methods
+to propose to the user. The authentication server compares the default authentication level and the different declared
+authentication method and chose the correct one based on the value on this parameter.
+This parameter has 4 possible valid values:
+
+<ul>
+<li><code>exact</code>: Authentication methods that have an authentication level equal to the default authentication level.</li>
+<li><code>minimum</code>: Authentication methods that have an authentication level equal or better than the default authentication level.</li>
+<li><code>better</code>: Authentication methods that have an authentication level better than the default authentication level.</li>
+<li><code>maximum</code>:  Authentication methods that have an authentication level equal or lower than the default authentication level.</li>
+</ul></li>
+</ul>
+
+<h3 id="configure-a-specific-authentication-level-for-an-application">Configure a specific authentication level for an application</h3>
+
+<p>You can configure a specific authentification level for an application that will override both the authentication level requested by the application (if any) or the default authentification level.</p>
+
+<p>This behaviour is configured through the ´applicationSpecificAuthLevel´ parameter. This parameter is a list.</p>
+
+<p>An application specific authentication level has 3 properties:</p>
+
+<ul>
+<li><code>appName</code>: The unique identifier of the application. For a SAML 2.0 Service Provider, this is the entity ID.</li>
+<li><code>authLevel</code></li>
+<li><code>comparison</code></li>
+</ul>
+
+<p>The meaning of <code>authLevel</code> and <code>comparison</code> is the same as in the previous section.</p>
+
+<h3 id="sample-configuration-1">Sample configuration</h3>
+
+<p>Here is a sample configuration for this section:</p>
+
+<pre><code class="language-yaml">authPolicyConfiguration:
+  authLevels:
+    - &amp;low
+      name: low
+      urn: urn:identio:auth-level:low
+    - &amp;medium
+      name: medium
+      urn: urn:identio:auth-level:medium
+    - &amp;strong
+      name: strong
+      urn: urn:identio:auth-level:strong
+  defaultAuthLevel:
+    authLevel: *medium
+    comparison: minimum
+  applicationSpecificAuthLevel:
+    - appName: http://sp1.identio.net:8080/sp/SAML2
+      authLevel: *medium
+      comparison: minimum
+</code></pre>
+
+<h2 id="saml-identity-provider-configuration">SAML Identity Provider configuration</h2>
+
+<p>The SAML Identity provider is configured in the <code>samlIdpConfiguration</code> section.</p>
+
+<h3 id="saml-protocol-validation">SAML protocol validation</h3>
+
+<ul>
+<li><code>allowUnsecureRequests</code>: Set to <code>true</code> to allow unsigned SAML requests (default: <code>false</code>).</li>
+<li><code>allowedTimeOffset</code>: Maximum clock skew (in minutes) allowed for a Service Provider registered to this server (default: <code>0</code>).</li>
+<li><code>tokenValidityLength</code>: Validity period of a SAML assertion emitted by the Identity Provider (default: <code>3</code>).</li>
+<li><code>certificateCheckEnabled</code>: Set to true if you want the Identity Provider to check the validity of the signing certificates (default: <code>false</code>).</li>
+</ul>
+
+<div class="bs-callout bs-callout-info">
+  <h4>About certificate validation</h4>
+  <p>Certificate validation is not recommended by OASIS for interoperability reasons.  More on this in the
+<a href="http://docs.oasis-open.org/security/saml/Post2.0/sstc-metadata-iop.pdf">SAML V2.0 Metadata Interoperability Profile document</a>.</p>
+
+</div>
+
+
+<h3 id="metadata-informations">Metadata informations</h3>
+
+<ul>
+<li><code>contactPersonEmail</code>: Email address to get support for this Identity Provider</li>
+<li><code>contactPersonSurname</code>: Name of the contact of this support</li>
+<li><code>organizationDisplayName</code>: Display name of the organization this Identity Provider belongs to.</li>
+<li><code>organizationName</code>: Name of the organization defined previously.</li>
+<li><code>organizationUrl</code>: URL of the website of this organization.</li>
+</ul>
+
+<h3 id="miscellaneous-1">Miscellaneous</h3>
+
+<ul>
+<li><code>keystore</code>: Path to the PKCS12 keystore containing the signing certificate used to sign the SAML protocol elements. (Default: <code>idp-default-sign-certificate.p12</code> in the configuration directory)</li>
+<li><code>keystorePassword</code>: Password of this keystore (default: <code>password</code>)</li>
+<li><code>spMetadataDirectory</code>: Path to the directory containing the trusted Service Provider metadatas. Ident.io server scans this directory every 30s for metadatas changes. (Default: <code>trusted-sp</code> in the configuration directory)</li>
+</ul>
+
+<h3 id="sample-configuration-2">Sample configuration</h3>
+
+<p>Here is a sample configuration for this section:</p>
+
+<pre><code class="language-yaml">authPolicyConfiguration:
+  authLevels:
+    - &amp;low
+      name: low
+      urn: urn:identio:auth-level:low
+    - &amp;medium
+      name: medium
+      urn: urn:identio:auth-level:medium
+    - &amp;strong
+      name: strong
+      urn: urn:identio:auth-level:strong
+  defaultAuthLevel:
+    authLevel: *medium
+    comparison: minimum
+  applicationSpecificAuthLevel:
+    - appName: http://sp1.identio.net:8080/sp/SAML2
+      authLevel: *medium
+      comparison: minimum
+</code></pre>
+
+<h2 id="session-configuration">Session configuration</h2>
+
+<p>The user session is configured in the <code>samlIdpConfiguration</code> section.</p>
+
+<p>The session is stored in memory.</p>
+
+<p>This section is composed of 1 parameter (for now):</p>
+
+<ul>
+<li><code>duration</code>: Period in minutes of user inactivity after which the session will be destroyed.</li>
+</ul>
+
+<h3 id="sample-configuration-3">Sample configuration</h3>
+
+<p>Here is a sample configuration for this section:</p>
+
+<pre><code class="language-yaml">sessionConfig:
+  duration: 120
+</code></pre>
+
+<h2 id="authentication-methods-configuration">Authentication methods configuration</h2>
+
+<p>The different authentication methods are configured in the <code>authMethodConfiguration</code> section.</p>
+
+<p>Ident.io server currently supports 5 authentication methods types out-of-the-box:</p>
+
+<ul>
+<li><strong>Local</strong>: Login and passwords are stored in a YAML file. Password can be stored hashed (Bcrypt hash) or in plain text.</li>
+<li><strong>LDAP</strong>: Login and password authentication on a LDAP directory.</li>
+<li><strong>Radius</strong>: Login and password stored on a Radius Server. This method also supports RSA SecurID® specific &ldquo;New PIN mode&rdquo; and &ldquo;Next token mode&rdquo; challenges.</li>
+<li><strong>SAML</strong>: Authentication delegated to another SAML 2.0 compliant Identity Provider. Ident.io server acts as a SAML 2.0 IDP Proxy. This method also offers a flexible way to map authentication levels between the remote Identity Provider and Ident.io.</li>
+<li><strong>X.509 Certificates</strong>: Authentication based on X.509 certificates. This method offers a powerful mean to analyse attributes</li>
+</ul>
+
+<div class="bs-callout bs-callout-info">
+  <h4>Authentication methods naming</h4>
+  <p>Each authentication method starts with an anchor (name prefixed with <code>&amp;</code>), in order to be used as a reference
+elsewhere in the configuration.</p>
+
+</div>
+
+
+<h3 id="local-authentication">Local authentication</h3>
+
+<p>The Local authentication methods are configured in the <code>localAuthMethods</code> section.</p>
+
+<p>The following options can be set:</p>
+
+<ul>
+<li><code>name</code>: Display name of the authentication method.</li>
+<li><code>authLevel</code>: A reference to a authentication level declared in a previous section.
+It must start with a <code>*</code> character (denoting a reference in YAML)</li>
+<li><code>userFilePath</code>: Path to the YAML file containing the users definitions (default: <code>users.yml</code> in the config directory)</li>
+</ul>
+
+<h4 id="adding-users">Adding users</h4>
+
+<p>You can add arbitrary users in the user file. All users should be added in the <code>users</code> list, with the following attributes:</p>
+
+<ul>
+<li><code>userId</code>: Identifier of the user</li>
+<li><code>password</code>: Password of the user. It can be either in plaintext or hashed via the Bcrypt algorithm.</li>
+</ul>
+
+<p>You can use the <code>password-generator</code> utility in the <code>bin</code> directory to generate a BCrypt hashed password.</p>
+
+<p>On UNIX systems:</p>
+
+<pre><code class="language-sh">$ bin\password-generator
+</code></pre>
+
+<p>On Windows systems:</p>
+
+<pre><code class="language-sh">$ bin\password-generator.bat
+</code></pre>
+
+<h4 id="sample-configuration-4">Sample configuration</h4>
+
+<p>Here is a sample configuration for this section:</p>
+
+<pre><code class="language-yaml">localAuthMethods:
+  - &amp;local
+    name: Local
+    authLevel: *medium
+    userFilePath: /opt/identio/config/users.yml
+</code></pre>
+
+<h3 id="ldap-authentication">LDAP authentication</h3>
+
+<p>The LDAP authentication methods are configured in the <code>ldapAuthMethods</code> section.</p>
+
+<h4 id="common-configuration-options">Common configuration options</h4>
+
+<p>The following options can be set:</p>
+
+<ul>
+<li><code>name</code>: Display name of the authentication method.</li>
+<li><code>authLevel</code>: A reference to a authentication level declared in a previous section.
+It must start with a <code>*</code> character (denoting a reference in YAML)</li>
+<li><code>baseDn</code>: Base DN of the LDAP directory.</li>
+<li><code>ldapUrl</code>: A list containing the LDAP servers URLs. The hosts will
+be tried successively in case of a timeout or error.</li>
+<li><code>proxyUser</code>: DN of the proxy user used to search the directory. Don&rsquo;t set this option
+for anonymous search.</li>
+<li><code>proxyUser</code>: Password of the proxy user.</li>
+<li><code>trustCert</code>: The path to the Certificate Autority that will be used to validate the certificate
+of the LDAP server when accessed through LDAPS protocol.</li>
+<li><code>userSearchFilter</code>: LDAP filter used to search a user in the LDAP directory. A specific place-holder <code>#UID</code>
+must appear in the filter definition. It will be replaced by the identifier given by the user.</li>
+</ul>
+
+<h4 id="pool-configuration">Pool configuration</h4>
+
+<p>The LDAP authentication method supports connection pooling and validation. This configuration
+is done through the <code>poolConfig</code> property.</p>
+
+<p>The following options are available:</p>
+
+<ul>
+<li><code>maxIdleConnections</code>: Maximum number of idle connections to maintain to the directory.</li>
+<li><code>minEvictableIdleTime</code>: Minimum amount of time that a connection may stay idle before being eligible to eviction.
+The value <code>-1</code> should be used if you don&rsquo;t want to close idle connections.</li>
+<li><code>minIdleConnections</code>: Minimum number of idle connections to maintain to the directory.</li>
+<li><code>numTestsPerEvictionRun</code>: Number of connections tested at each validation run.</li>
+<li><code>testOnBorrow</code>: <code>true</code> if the connection should be tested before each authentication request.</li>
+<li><code>testRequestFilter</code>: Search filter to use for testing the connection.</li>
+<li><code>testWhileIdle</code>: <code>true</code> if tests should be done when the connection is idle.</li>
+<li><code>timeBetweenEvictionRuns</code>: Time in second between two connection validation runs.</li>
+</ul>
+
+<h4 id="sample-configuration-5">Sample configuration</h4>
+
+<p>Here is a sample configuration for this section:</p>
+
+<pre><code class="language-yaml">ldapAuthMethods:
+- &amp;corpLDAP
+    name: Corporate LDAP
+    authLevel: *medium
+    baseDn: c=identio
+    ldapUrl:
+      - ldaps://myldap1:636
+      - ldaps://myldap2:636
+    proxyUser: cn=proxyUser,ou=applications,c=identio
+    proxyPassword: $5hG!s2Am9&amp;#
+    trustCert: /opt/identio/config/ldap-trust-ca.crt
+    userSearchFilter: (&amp;(objectclass=person)(cn=#UID))
+    poolConfig:
+      maxIdleConnections: 8
+      minEvictableIdleTime: -1
+      minIdleConnections: 4
+      numTestsPerEvictionRun: 4
+      testOnBorrow: true
+      testRequestFilter: (objectclass=*)
+      testWhileIdle: true
+      timeBetweenEvictionRuns: 60
+</code></pre>
+
+<h3 id="radius-authentication">Radius authentication</h3>
+
+<p>The Radius authentication methods are configured in the <code>radiusAuthMethods</code> section.
+This authentication method supports the specific challenges sent by the RSA SecurID®
+Radius server.</p>
+
+<h4 id="common-configuration-options-1">Common configuration options</h4>
+
+<p>The following options can be set:</p>
+
+<ul>
+<li><code>name</code>: Display name of the authentication method.</li>
+<li><code>authLevel</code>: A reference to a authentication level declared in a previous section.
+It must start with a <code>*</code> character (denoting a reference in YAML)</li>
+<li><code>authPort</code>: Port of the Radius authentication service.</li>
+<li><code>accountPort</code>: Port of the Radius accounting service.</li>
+<li><code>radiusHost</code>: A list containing the radius server hostnames. The hosts will
+be tried successively in case of a timeout.</li>
+<li><code>sharedSecret</code>: The Radius shared secret for Ident.io.</li>
+<li><code>timeout</code>: Time in milliseconds to wait for a response of the Radius server.</li>
+</ul>
+
+<h4 id="sample-configuration-6">Sample configuration</h4>
+
+<p>Here is a sample configuration for this section:</p>
+
+<pre><code class="language-yaml">radiusAuthMethods:
+  - &amp;securID
+    name: SecurID
+    authLevel: *strong
+    authPort: 1812
+    accountPort: 1813
+    radiusHost:
+      - host1.myfqn
+      - host2.myfqdn
+    sharedSecret: $5hG!s2Am9&amp;#
+    timeout: 5000
+</code></pre>
+
+<h3 id="saml-authentication-identity-provider-proxying">SAML authentication: Identity Provider Proxying</h3>
+
+<p>The SAML authentication methods are configured in the <code>samlAuthMethods</code> section.
+This section is a list, you can include multiple authentication methods, if you want
+to delegate authentication to multiple Identity Providers.</p>
+
+<h4 id="general-configuration">General configuration</h4>
+
+<p>The following options can be set:</p>
+
+<ul>
+<li><code>name</code>: Display name of the authentication method.</li>
+<li><code>certificateCheckEnabled</code>: Set to true if you want the Identity Provider to check the validity of the signing certificates (default: <code>false</code>).</li>
+<li><code>metadata</code>: The path to the metadata of the target Identity Provider.</li>
+<li><code>logoFileName</code>: The path to the logo that will be used to display the target Identity Provider
+on the logon page.</li>
+</ul>
+
+<h4 id="authentication-levels-mapping">Authentication levels mapping</h4>
+
+<p>The SAML authentication method offers a flexible way to convert Ident.io authentication levels
+to authentication contexts that the target Identity Provider is able to understand. In reverse,
+Ident.io can also map authentication contexts of the target Identity Provider to internal
+authentication levels.</p>
+
+<p>This mapping is declared in the <code>samlAuthMap</code> property. Two maps can be declared:</p>
+
+<ul>
+<li><code>out</code>: Outbound mapping of Ident.io&rsquo;s authentication levels to authentication contexts in the SAML requests sent to this remote Identity Provider.</li>
+<li><code>in</code>: Inbound mapping of the authentication contexts in the SAML responses coming from this remote Identity Provider.</li>
+</ul>
+
+<h5 id="outbound-mapping">Outbound mapping</h5>
+
+<p>The <code>out</code> section must list all the authentication contexts supported for this Identity Provider.</p>
+
+<p>An example configuration could be:</p>
+
+<pre><code class="language-yaml">out:
+  *strong: urn:oasis:names:tc:SAML:2.0:ac:classes:MobileTwoFactorContract
+  *medium: urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport
+</code></pre>
+
+<p>This configuration means that this remote Identity Provider will appear on the logon
+script only if the authentication level requested is <code>medium</code> or <code>strong</code>. If the authentication
+level must be <em>exactly</em> <code>low</code>, it will not appear. If the authentication level must be at <em>minimum</em> <code>low</code>, it will appear.</p>
+
+<p>If the authentication level is <code>strong</code>, the SAML request will contain a requested authentication
+context of <code>urn:oasis:names:tc:SAML:2.0:ac:classes:MobileTwoFactorContract</code>.</p>
+
+<div class="bs-callout bs-callout-info">
+  <h4>Handling of multiple authentication level</h4>
+  <p>If the initial request asks for a <code>medium</code> level with a <code>minimum</code> comparison, in the example above,
+the requests sent to the remote Identity Provider will requests both authentication contexts
+<code>urn:oasis:names:tc:SAML:2.0:ac:classes:MobileTwoFactorContract</code> and
+ <code>urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport</code>.</p>
+
+</div>
+
+
+<h5 id="inbound-mapping">Inbound mapping</h5>
+
+<p>The <code>in</code> section must list all the authentication contexts that this remote Identity Provider can send.
+An unknown authentication context in a response will result in the response being rejected by Ident.io.</p>
+
+<p>An example configuration could be:</p>
+
+<pre><code class="language-yaml">in:
+  urn:oasis:names:tc:SAML:2.0:ac:classes:MobileTwoFactorContract: *strong
+  urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport: *medium
+</code></pre>
+
+<p>This configuration means that a response sporting <code>urn:oasis:names:tc:SAML:2.0:ac:classes:MobileTwoFactorContract</code>
+authentication context will be map to a <code>strong</code> authentication level (note the <code>*</code> character denoting a reference
+to an internal authentication level).
+Similarly, a response sporting <code>urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport</code>
+authentication context will be map to a <code>medium</code> authentication level.</p>
+
+<h4 id="sample-configuration-7">Sample configuration</h4>
+
+<p>Here is a sample configuration for this section:</p>
+
+<pre><code class="language-yaml">samlAuthMethods:
+  - &amp;remoteIDP
+    name: Remote Identity Provider
+    certificateCheckEnabled: false
+    logoFileName: /opt/identio/config/trusted-idp/remote-idp.jpg
+    metadata: /opt/identio/config/trusted-idp/remote-idp.xml
+    samlAuthMap:
+      in:
+        urn:oasis:names:tc:SAML:2.0:ac:classes:MobileTwoFactorContract: *strong
+        urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport: *medium
+      out:
+        *strong: urn:oasis:names:tc:SAML:2.0:ac:classes:MobileTwoFactorContract
+        *very-weak: urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport
+        *medium: urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport
+        *weak: urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport
+</code></pre>
+
+<h3 id="x-509-certificate-authentication">X.509 Certificate authentication</h3>
+
+<p>The X.509 authentication methods are configured in the <code>x509AuthMethods</code> section.
+This section is a list, you can include multiple authentication methods
+(for example, one for software certificates and one for certificates embedded in a smartcard
+or if you want to handle several client certificate authorities).
+This authentication method is transparent for the end-user, meaning that it will
+be checked before displaying the login screen.</p>
+
+<h4 id="common-configuration-options-2">Common configuration options</h4>
+
+<p>The following options can be set:</p>
+
+<ul>
+<li><code>name</code>: Display name of the authentication method.</li>
+<li><code>authLevel</code>: A reference to a authentication level declared in a previous section.
+It must start with a <code>*</code> character (denoting a reference in YAML)</li>
+<li><code>clientCertTrust</code>: The path to the client Certificate Autority that will be used
+to validate the end-user certificate.</li>
+</ul>
+
+<h4 id="choose-a-deployment-model">Choose a deployment model</h4>
+
+<p>X.509 certificate authentication is often dependent on the deployment architecture
+(SSL offloading on a load-balancer, reverse proxying, etc.).
+As such, Ident.io offers 3 different configurations to secure the authentication,
+defined by the <code>security</code> property which takes the following valid values:</p>
+
+<ul>
+<li><strong>native</strong>: Ident.io is the SSL end-point and directly handles the authentication.</li>
+<li><strong>shared-secret</strong>: A reverse-proxy or load-balancer is the SSL endpoint and handles the
+authentication. The public user certificate is sent by the reverse proxy in a
+header and the communication between the load-balancer and Ident.io is secured by
+a shared-secret, also communicated in a header.</li>
+<li><strong>ssl</strong>: A reverse-proxy or load-balancer is the SSL endpoint and handles the
+authentication. The public user certificate is sent by the reverse proxy in a
+header and the communication between the load-balancer and Ident.io is secured by
+mutual SSL authentication.</li>
+</ul>
+
+<h5 id="native-security">Native security</h5>
+
+<p>In this mode, Ident.io is the SSL end-point and directly handles the authentication.
+The server is automatically configured to authenticate clients with the certificate
+authority defined by the <code>clientCertTrust</code> property.</p>
+
+<div class="bs-callout bs-callout-info">
+  <h4>Enable SSL</h4>
+  <p>This security mode only works when SSL is enabled on Ident.io server (cf. <a href="#ssl-configuration">SSL configuration</a>)</p>
+
+</div>
+
+
+<h5 id="shared-secret-security">Shared secret security</h5>
+
+<p>In this mode, the reverse proxy in front of Ident.io sends two headers: one containing
+the public certificate and one containing a shared secret, unknown to end-users.</p>
+
+<p>Ident.io will do the following:</p>
+
+<ul>
+<li>The client certificate is extracted from the header specified by the <code>certHeaderName</code>
+property. If the reverse-proxy is Apache-based, the <code>apacheFix</code> property must be set to
+true to circumvent a bug in the way Apache encodes client certificates.</li>
+<li>The value of the header defined by the <code>securityHeaderName</code> property is check against
+the value of the <code>sharedSecret</code> property.</li>
+</ul>
+
+<h5 id="ssl-security">SSL security</h5>
+
+<p>In this mode, the reverse proxy in front of Ident.io sends one header containing
+the public certificate and is authenticated through mutual SSL authentication.</p>
+
+<p>Ident.io will do the following:</p>
+
+<ul>
+<li>Ident.io will only accepts requests that are authenticated through mutual SSL
+authentication, based on the certificate authority specified by the <code>proxyCertTrust</code>
+property. It will check that the Certificate DN and Issuer DN matches the values in the
+<code>proxyCertDn</code> property and the DN of the <code>proxyCertTrust</code> respectively.</li>
+<li>The client certificate is extracted from the header specified by the <code>certHeaderName</code>
+property. If the reverse-proxy is Apache-based, the <code>apacheFix</code> property must be set to
+true to circumvent a bug in the way Apache encodes client certificates.</li>
+</ul>
+
+<div class="bs-callout bs-callout-info">
+  <h4>Enable SSL</h4>
+  <p>This security mode only works when SSL is enabled on Ident.io server (cf. <a href="#ssl-configuration">SSL configuration</a>)</p>
+
+</div>
+
+
+<h3 id="filtering-and-extracting-user-identifier">Filtering and extracting user identifier</h3>
+
+<p>This authentication method allows to filter the user certificates based on their
+attributes.</p>
+
+<p>This filtering is described in the <code>conditionExpression</code> property, which is
+a <a href="http://docs.spring.io/spring/docs/current/spring-framework-reference/html/expressions.html">Spring Expression Language</a> string, applied on the certificate.</p>
+
+<p>The possible methods that can be applied to the certificate are described in the
+<a href="https://docs.oracle.com/javase/8/docs/api/java/security/cert/X509Certificate.html">JDK Javadoc</a></p>
+
+<p>For example, the expression <code>!getExtendedKeyUsage().contains('1.3.6.1.4.1.311.20.2.2') and getExtendedKeyUsage().contains('1.3.6.1.5.5.7.3.2')</code> will only accepts certificates that contains the OID <em>1.3.6.1.5.5.7.3.2</em> (Client authentication) in the Extended Key Usage but exclude those with the OID <em>1.3.6.1.4.1.311.20.2.2</em> (Smartcard logon).</p>
+
+<p>The user identifier is extracted with the same method. The expression should be specified by the <code>uidExpression</code> property.</p>
+
+<h3 id="sample-configurations">Sample configurations</h3>
+
+<p>Here is a sample configuration of a native X.509 certificate authentication method:</p>
+
+<pre><code class="language-yaml">x509AuthMethods:
+- &amp;softCert
+  name: Soft Certificate
+  authLevel: *medium
+  security: native
+  clientCertTrust: /opt/identio/config/client-ca.crt
+  conditionExpression: !getExtendedKeyUsage().contains('1.3.6.1.4.1.311.20.2.2') and getExtendedKeyUsage().contains('1.3.6.1.5.5.7.3.2')
+  uidExpression: getSubjectAlternativeNames()[2][1]
+</code></pre>
+
+<p>The same configuration, but with an Apache reverse proxy handling the SSL endpoint, configured with a shared secret:</p>
+
+<pre><code class="language-yaml">x509AuthMethods:
+- &amp;softCert
+  name: Soft Certificate
+  authLevel: *medium
+  security: shared-secret
+  apacheFix: true
+  certHeaderName: User-Cert
+  securityHeaderName: IIO-Shared-Secret
+  sharedSecret: F3ds!m5f[mld09hx2?
+  clientCertTrust: /opt/identio/config/client-ca.crt
+  conditionExpression: !getExtendedKeyUsage().contains('1.3.6.1.4.1.311.20.2.2') and getExtendedKeyUsage().contains('1.3.6.1.5.5.7.3.2')
+  uidExpression: getSubjectAlternativeNames()[2][1]
+</code></pre>
+
+<p>Again, the same configuration, but with an Apache reverse proxy handling the SSL endpoint,
+authenticated through SSL:</p>
+
+<pre><code class="language-yaml">x509AuthMethods:
+- &amp;softCert
+  name: Soft Certificate
+  authLevel: *medium
+  security: ssl
+  apacheFix: true
+  proxyCertTrust: /opt/identio/config/proxy-ca.crt
+  proxyCertDn: CN=myproxy,OU=myentity,O=mycompany
+  certHeaderName: User-Cert
+  clientCertTrust: /opt/identio/config/client-ca.crt
+  conditionExpression: !getExtendedKeyUsage().contains('1.3.6.1.4.1.311.20.2.2') and getExtendedKeyUsage().contains('1.3.6.1.5.5.7.3.2')
+  uidExpression: getSubjectAlternativeNames()[2][1]
+</code></pre>
+
+   </div>
+    <div class="col-lg-2">
+      <div class="menu toc" id="toc" data-spy="affix" data-offset-top="0" data-offset-bottom="-100">
+        <nav id="toc" data-toggle="toc"></nav>
+
+      </div>
+    </div>
+  </div>
+
+</div> 
+
+<footer>
+  <p>&copy; 2016 Ident.io</p>
+</footer>
+
+
+
+<script src="https://identio.github.io/js/jquery.min.js"></script>
+<script src="https://identio.github.io/js/bootstrap.min.js"></script>
+
+<script src="https://identio.github.io/js/ie10-viewport-bug-workaround.js"></script>
+<script src="https://identio.github.io/js/highlightjs/highlight.min.js"></script>
+<script src="https://identio.github.io/js/highlightjs/yaml.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+<script src="https://identio.github.io/js/bootstrap-toc.min.js"></script>
+</body>
+</html>
+
