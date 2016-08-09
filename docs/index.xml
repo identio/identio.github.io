@@ -753,7 +753,7 @@ true to circumvent a bug in the way Apache encodes client certificates.&lt;/li&g
 &lt;/div&gt;
 
 
-&lt;h3 id=&#34;filtering-and-extracting-user-identifier&#34;&gt;Filtering and extracting user identifier&lt;/h3&gt;
+&lt;h4 id=&#34;filtering-and-extracting-user-identifier&#34;&gt;Filtering and extracting user identifier&lt;/h4&gt;
 
 &lt;p&gt;This authentication method allows to filter the user certificates based on their
 attributes.&lt;/p&gt;
@@ -768,7 +768,7 @@ a &lt;a href=&#34;http://docs.spring.io/spring/docs/current/spring-framework-ref
 
 &lt;p&gt;The user identifier is extracted with the same method. The expression should be specified by the &lt;code&gt;uidExpression&lt;/code&gt; property.&lt;/p&gt;
 
-&lt;h3 id=&#34;sample-configurations&#34;&gt;Sample configurations&lt;/h3&gt;
+&lt;h4 id=&#34;sample-configurations&#34;&gt;Sample configurations&lt;/h4&gt;
 
 &lt;p&gt;Here is a sample configuration of a native X.509 certificate authentication method:&lt;/p&gt;
 
