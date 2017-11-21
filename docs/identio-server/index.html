@@ -58,11 +58,13 @@
 <ul>
 
   
-  
 
-  <li>
     
-        
+
+    <li>
+
+    
+      
 
 
 <a class="current" title="Introduction" href="https://identio.github.io/docs/identio-server/">
@@ -70,14 +72,16 @@
 	Introduction
 </a>
 
-      
-  </li>
-
+    
+    </li>
   
 
-  <li>
     
-        
+
+    <li>
+
+    
+      
 
 
 <a  title="Getting started" href="https://identio.github.io/docs/identio-server/getting-started/">
@@ -85,24 +89,43 @@
 	Getting started
 </a>
 
-      
-  </li>
-
+    
+    </li>
   
 
-  <li>
     
-        
+
+    <li>
+
+    
+      
 
 
-<a  title="Reference documentation" href="https://identio.github.io/docs/identio-server/reference/">
+<a  title="Launch parameters" href="https://identio.github.io/docs/identio-server/launch-parameters/">
 	
-	Reference documentation
+	Launch parameters
 </a>
 
-      
-  </li>
+    
+    </li>
+  
 
+    
+
+    <li>
+
+    
+      
+
+
+<a  title="Configuration reference" href="https://identio.github.io/docs/identio-server/reference/">
+	
+	Configuration reference
+</a>
+
+    
+    </li>
+  
 
 </ul>
 
@@ -115,11 +138,12 @@
 
 <h2 id="what-is-ident-io-server">What is Ident.io Server ?</h2>
 
-<p>Ident.io Server is a lightweight authentication and SSO server written in Java.
-It provides (for now) an implementation of a SAML 2.0 Identity Provider.
+<p>Ident.io Server is a lightweight authentication, authorization and SSO server.
+It provides an implementation of a SAML 2.0 Identity Provider and an OAuth 2.0
+authorization server.
 It aims to be portable, simple to configure and performant.</p>
 
-<h2 id="features">Features</h2>
+<h2 id="main-features">Main Features</h2>
 
 <h3 id="flexible-authentication-policy">Flexible authentication policy</h3>
 
@@ -148,6 +172,66 @@ following a &ldquo;batteries included but removable&rdquo; design.</p>
 
 <p>It can be deployed as a standalone in-memory application on a developer workstation
 or as a full high-availability solution with load-balancing.</p>
+
+<h3 id="cloud-native-architecture">Cloud Native architecture</h3>
+
+<p>Ident.io Server is designed from the ground up to be deployed in a cloud environment.
+An official Docker image is provided.</p>
+
+<h2 id="support-matrix">Support Matrix</h2>
+
+<h3 id="authentication-backends">Authentication backends</h3>
+
+<p>The following authentication backends are supported:</p>
+
+<ul>
+<li>LDAPv3 directory</li>
+<li>Radius (including RSA SecurID)</li>
+<li>Local filesystem</li>
+<li>X.509 Certificates</li>
+</ul>
+
+<h3 id="social-login">Social Login</h3>
+
+<p>Authentication can be delegated to the following services:</p>
+
+<ul>
+<li>Any SAML 2.0 compliant authentication server</li>
+</ul>
+
+<h3 id="configuration-backend">Configuration backend</h3>
+
+<p>The following configuration backends are supported:</p>
+
+<ul>
+<li>Local filesystem</li>
+<li>Git repository</li>
+<li><a href="https://www.vaultproject.io/">Hashicorp Vault</a> Server for storing secrets</li>
+<li><a href="https://cloud.spring.io/spring-cloud-config/">Spring Cloud Config Server</a></li>
+<li>System environment variables (useful in a container deployment)</li>
+</ul>
+
+<h3 id="saml-2-0">SAML 2.0</h3>
+
+<p>The server supports the SAML 2.0 Web Browser SSO Profile of SAML 2.0.</p>
+
+<h3 id="oauth-2-0">OAuth 2.0</h3>
+
+<p>The following features are supported:</p>
+
+<ul>
+<li>OAuth 2.0 Core (<a href="https://tools.ietf.org/html/rfc6749">RFC 6749</a>)</li>
+<li>OAuth 2.0 Token Introspection (<a href="https://tools.ietf.org/html/rfc7662">RFC 7662</a>)</li>
+<li>Proof Key for Code Exchange (<a href="https://tools.ietf.org/html/rfc7636">RFC7636</a>)</li>
+</ul>
+
+<h2 id="roadmap">Roadmap</h2>
+
+<p>The roadmap of the next releases of Ident.io server can be found on <a href="https://github.com/identio/identio-server/milestones">Github</a>.</p>
+
+<h2 id="community">Community</h2>
+
+<p>If you have an issue, question or an enhancement suggestion, please submit it on the project page on  <a href="https://github.com/identio/identio-server/issues">Github</a>.</p>
 
    </div>
     <div class="col-lg-2">

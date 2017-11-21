@@ -58,11 +58,13 @@
 <ul>
 
   
-  
 
-  <li>
     
-        
+
+    <li>
+
+    
+      
 
 
 <a  title="Introduction" href="https://identio.github.io/docs/identio-server/">
@@ -70,14 +72,16 @@
 	Introduction
 </a>
 
-      
-  </li>
-
+    
+    </li>
   
 
-  <li>
     
-        
+
+    <li>
+
+    
+      
 
 
 <a  title="Getting started" href="https://identio.github.io/docs/identio-server/getting-started/">
@@ -85,24 +89,43 @@
 	Getting started
 </a>
 
-      
-  </li>
-
+    
+    </li>
   
 
-  <li>
     
-        
+
+    <li>
+
+    
+      
 
 
-<a class="current" title="Reference documentation" href="https://identio.github.io/docs/identio-server/reference/">
+<a  title="Launch parameters" href="https://identio.github.io/docs/identio-server/launch-parameters/">
 	
-	Reference documentation
+	Launch parameters
 </a>
 
-      
-  </li>
+    
+    </li>
+  
 
+    
+
+    <li>
+
+    
+      
+
+
+<a class="current" title="Configuration reference" href="https://identio.github.io/docs/identio-server/reference/">
+	
+	Configuration reference
+</a>
+
+    
+    </li>
+  
 
 </ul>
 
@@ -114,13 +137,15 @@
 <h1 id="reference-documentation">Reference documentation</h1>
 
 <p>This page details the configuration options of Ident.io.
-The configuration is by default located in the file <code>identio-config.yml</code> in the <code>config</code>
-directory.</p>
+The configuration is by default located in the <code>identio.yml</code> file.</p>
+
+<p>Each configuration option can also be provided as a system environment variable.
+For example, the system variable <code>global.port</code> will set the TCP port to open.</p>
 
 <div class="bs-callout bs-callout-warning">
   <h4>Warning</h4>
   
-As the configuration is a YAML file, be aware that the identation of each item is important.
+As the configuration is a YAML file, be aware that the indentation of each item is important.
 
 </div>
 
@@ -130,23 +155,24 @@ As the configuration is a YAML file, be aware that the identation of each item i
 <ul>
 <li><strong>Global</strong>: technical configuration of the server (ports, url, etc.)</li>
 <li><strong>Authentication policy</strong>: configuration of the authentication policy to apply to authentication requests</li>
+<li><strong>Authorization</strong>: configuration of the authorization policy.</li>
 <li><strong>SAML Identity Provider</strong>: configuration of the SAML Identity Provider</li>
+<li><strong>OAuth server</strong>: configuration of the OAuth authorization server</li>
 <li><strong>Session</strong>: configuration of the session storage</li>
 <li><strong>Authentication methods</strong>: configuration of the authentication methods that an user can use to authenticate</li>
+<li><strong>Data sources</strong>: configuration of the different data-sources used by modules of the application</li>
 </ul>
 
 <h2 id="global-configuration">Global configuration</h2>
 
-<p>The global configuration is defined in the <code>globalConfiguration</code> section.</p>
+<p>The global configuration is defined in the <code>global</code> section.</p>
 
-<h3 id="host-and-port">Host and port</h3>
+<h3 id="public-url-and-port">Public URL and port</h3>
 
 <ul>
-<li><code>port</code>: TCP port to open (default: <code>10080</code>).</li>
-<li><code>publicFqdn</code>: Public fully qualified domain name of the server. This is the url that end-users
-will use to access the authentication server.</li>
-<li><code>workDirectory</code>: A directory where the SSL Keystore of the embedded application
-server will be created (default: the directory hosting the configuration).</li>
+<li><code>port</code>: TCP port to open (default: <code>10080</code> for HTTP, <code>10443</code> for HTTPS).</li>
+<li><code>basePublicUrl</code>: Public fully qualified domain name of the server. This is the url that end-users
+will use to access the server.</li>
 </ul>
 
 <h3 id="ssl-configuration">SSL configuration</h3>
@@ -155,8 +181,19 @@ server will be created (default: the directory hosting the configuration).</li>
 
 <ul>
 <li><code>secure</code>: Set to <code>true</code> to enable SSL on the server (default: <code>false</code>).</li>
-<li><code>keystorePath</code>: Path to the PKCS12 file containing the SSL certificate for the server.</li>
-<li><code>keystorePassword</code>: Password of the PKCS12 file.</li>
+<li><code>sslKeystorePath</code>: Path to the PKCS12 file containing the SSL certificate for the server
+(default: <code>config/ssl-certificate.p12</code>).</li>
+<li><code>sslKeystorePassword</code>: Password of the PKCS12 file (default: <code>password</code>).</li>
+</ul>
+
+<h3 id="digital-signature-configuration">Digital signature configuration</h3>
+
+<p>Those parameters configure the keystore used in digital signatures of SAML or JWT tokens.</p>
+
+<ul>
+<li><code>signatureKeystorePath</code>: Path to the PKCS12 file containing the signing certificate for the server
+(default: <code>config/default-sign-certificate.p12</code>).</li>
+<li><code>signatureKeystorePassword</code>: Password of the PKCS12 file (default: <code>password</code>).</li>
 </ul>
 
 <h3 id="miscellaneous">Miscellaneous</h3>
@@ -170,27 +207,26 @@ if you want to customize the UI of the server (default: <code>ui</code> director
 
 <p>Here is a sample configuration for this section:</p>
 
-<pre><code class="language-yaml">globalConfiguration:
-  keystorePath: /opt/identio/config/idp.identio.net.p12
-  keystorePassword: password
+<pre><code class="language-yaml">global:
+  sslKeystorePath: /opt/identio/config/idp.identio.net.p12
+  sslKeystorePassword: password
+  signatureKeystorePath: /opt/identio/config/sign-certificate.p12
+  signatureKeystorePassword: password  
   port: 443
-  publicFqdn: https://idp.identio.net
+  basePublicUrl: https://idp.identio.net
   secure: true
-  workDirectory: /opt/identio/config
   staticResourcesPath: /opt/identio/ui
 </code></pre>
 
 <h2 id="authentication-policy-configuration">Authentication policy configuration</h2>
 
-<p>The authentication policy is defined in the <code>authPolicyConfiguration</code> section.</p>
+<p>The authentication policy is defined in the <code>authPolicy</code> section.</p>
 
 <h3 id="authentication-levels-configuration">Authentication levels configuration</h3>
 
 <p>The authentication levels are defined in the <code>authLevels</code> property.</p>
 
-<p>This is a list of the authentication levels you want to handle, ordered from the weakest to the strongest.
-Each item of the list start with an anchor (name prefixed with <code>&amp;</code>), in order to be used as a reference
-elsewhere in the configuration.</p>
+<p>This is a list of the authentication levels you want to handle, ordered from the weakest to the strongest.</p>
 
 <p>Each authentication levels has two properties:</p>
 
@@ -208,8 +244,7 @@ is usable to determine which authentication level to apply.</p>
 <p>The default authentication level has two properties:</p>
 
 <ul>
-<li><code>authLevel</code>: A reference to a authentication level declared in the previous section.
-It must start with a <code>*</code> character (denoting a reference in YAML)</li>
+<li><code>authLevel</code>: The name of the authentication level declared in the previous section.</li>
 <li><code>comparison</code>: Used by the authentication server to determine which authentication methods
 to propose to the user. The authentication server compares the default authentication level and the different declared
 authentication method and chose the correct one based on the value on this parameter.
@@ -225,9 +260,9 @@ This parameter has 4 possible valid values:
 
 <h3 id="configure-a-specific-authentication-level-for-an-application">Configure a specific authentication level for an application</h3>
 
-<p>You can configure a specific authentification level for an application that will override both the authentication level requested by the application (if any) or the default authentification level.</p>
+<p>You can configure a specific authentication level for an application that will override both the authentication level requested by the application (if any) or the default authentication level.</p>
 
-<p>This behaviour is configured through the ´applicationSpecificAuthLevel´ parameter. This parameter is a list.</p>
+<p>This behavior is configured through the ´applicationSpecificAuthLevel´ parameter. This parameter is a list.</p>
 
 <p>An application specific authentication level has 3 properties:</p>
 
@@ -243,29 +278,58 @@ This parameter has 4 possible valid values:
 
 <p>Here is a sample configuration for this section:</p>
 
-<pre><code class="language-yaml">authPolicyConfiguration:
+<pre><code class="language-yaml">authPolicy:
   authLevels:
-    - &amp;low
-      name: low
+    - name: low
       urn: urn:identio:auth-level:low
-    - &amp;medium
-      name: medium
+    - name: medium
       urn: urn:identio:auth-level:medium
-    - &amp;strong
-      name: strong
+    - name: strong
       urn: urn:identio:auth-level:strong
   defaultAuthLevel:
-    authLevel: *medium
+    authLevel: medium
     comparison: minimum
   applicationSpecificAuthLevel:
     - appName: http://sp1.identio.net:8080/sp/SAML2
-      authLevel: *medium
+      authLevel: medium
       comparison: minimum
+</code></pre>
+
+<h2 id="authorization-configuration">Authorization configuration</h2>
+
+<p>The authorization policy is configured in the <code>authorization</code> section.</p>
+
+<p>In this section, you can define the authorization scopes that are managed by the authorization server.</p>
+
+<p>Each scope is declared in the <code>scopes</code> section and contains the following informations:</p>
+
+<ul>
+<li><code>name</code>: Name of the scope</li>
+<li><code>authLevel</code>: Name of the authentication level of the end-user that is necessary to get this scope</li>
+<li><code>expirationTime</code>: Maximum time to live in seconds of an access token containing this scope</li>
+<li><code>description</code>: A list of descriptions of the scope for end-users. Each item of the list is the description in a specific locale.</li>
+</ul>
+
+<h3 id="sample-configuration-2">Sample configuration</h3>
+
+<p>Here is a sample configuration for this section:</p>
+
+<pre><code class="language-yaml">authorization:
+  scopes:
+    - name: scope.test.1
+      authLevel: medium
+      expirationTime: 2400
+      description:
+        fr: Accéder à scope test 1
+        en: Access scope test 1
+    - name: scope.test.2
+      authLevel: strong
+      expirationTime: 3600
 </code></pre>
 
 <h2 id="saml-identity-provider-configuration">SAML Identity Provider configuration</h2>
 
-<p>The SAML Identity provider is configured in the <code>samlIdpConfiguration</code> section.</p>
+<p>The SAML Identity provider is configured in the <code>samlIdp</code> section.</p>
 
 <h3 id="saml-protocol-validation">SAML protocol validation</h3>
 
@@ -302,53 +366,143 @@ This parameter has 4 possible valid values:
 <li><code>spMetadataDirectory</code>: Path to the directory containing the trusted Service Provider metadatas. Ident.io server scans this directory every 30s for metadatas changes. (Default: <code>trusted-sp</code> in the configuration directory)</li>
 </ul>
 
-<h3 id="sample-configuration-2">Sample configuration</h3>
+<h3 id="sample-configuration-3">Sample configuration</h3>
 
 <p>Here is a sample configuration for this section:</p>
 
-<pre><code class="language-yaml">authPolicyConfiguration:
-  authLevels:
-    - &amp;low
-      name: low
-      urn: urn:identio:auth-level:low
-    - &amp;medium
-      name: medium
-      urn: urn:identio:auth-level:medium
-    - &amp;strong
-      name: strong
-      urn: urn:identio:auth-level:strong
-  defaultAuthLevel:
-    authLevel: *medium
-    comparison: minimum
-  applicationSpecificAuthLevel:
-    - appName: http://sp1.identio.net:8080/sp/SAML2
-      authLevel: *medium
-      comparison: minimum
+<pre><code class="language-yaml">samlIdp:
+  allowUnsecureRequests: true
+  allowedTimeOffset: 1
+  certificateCheckEnabled: true
+  contactPersonEmail: support@identio.net
+  contactPersonSurname: Ident.io Support
+  organizationDisplayName: Ident.io IDP
+  organizationName: Ident.io IDP
+  organizationUrl: http://identio.net
+  spMetadataDirectory: /opt/identio/config/sp/
+  tokenValidityLength: 3
+</code></pre>
+
+<h2 id="oauth-server-configuration">OAuth Server configuration</h2>
+
+<p>The OAuth server is configured in the <code>oAuthServer</code> section.</p>
+
+<p>The following parameters can be set:</p>
+
+<ul>
+<li><code>actorsFile</code>: Path to the file defining clients and resource servers (default: <code>config/oauth-clients.yml</code>).</li>
+<li><code>dataSource</code>: Name of the datasource where tokens and codes are stored. If omitted,
+everything is stored in memory. Only JDBC data sources are supported for now.</li>
+<li><code>jwtToken</code>: Set to <code>true</code> to generate access token in JWT format (default: <code>false</code>)</li>
+</ul>
+
+<h3 id="sample-configuration-4">Sample configuration</h3>
+
+<pre><code class="language-yaml">oAuthServer:
+  clientFile: /opt/identio/config/oauth-clients.yml
+  dataSource: jdbc-database
+  jwtToken: true
+</code></pre>
+
+<h3 id="actors-file-configuration">Actors file configuration</h3>
+
+<p>The actors file contains two sections. One for the clients and one for the resource servers.</p>
+
+<p>The clients are declared in the <code>clients</code> section.</p>
+
+<p>The following properties can be set for each client:</p>
+
+<ul>
+<li><code>name</code>: Name of the client</li>
+<li><code>clientId</code>: Client Id of the client</li>
+<li><code>clientSecret</code>: Client secret of the client</li>
+<li><code>allowedScopes</code>: List of all the scope names that the client is allowed to request.</li>
+<li><code>responseUri</code>: List of valid callback urls for sending responses</li>
+<li><code>allowedGrants</code>: List of grants that the client is allowed to use. The server allows this grants:
+
+<ul>
+<li><code>token</code>: Implicit grant</li>
+<li><code>authorization_code</code>: Authorization code grant</li>
+<li><code>refresh_token</code>: Refresh token grant</li>
+<li><code>client_credentials</code>: Client credentials grant</li>
+<li><code>password</code>: Resource owner credentials grant. The <code>resourceOwnerAuthMethod</code> configuration property must be set when
+enabling this grant.</li>
+</ul></li>
+<li><code>consentNeeded</code>: Indicates if an user consent is needed for each scope requested by this client</li>
+<li><code>resourceOwnerAuthMethod</code>: Name of the authentication method to use when the resource owner credentials flow is invoked by this client.</li>
+</ul>
+
+<p>The resource servers are declared in the <code>resourceServers</code> section.</p>
+
+<p>The following properties can be set for each resource server:</p>
+
+<ul>
+<li><code>name</code>: Name of the client</li>
+<li><code>clientId</code>: Client Id of the client</li>
+<li><code>clientSecret</code>: Client secret of the client. It can be either in plaintext or hashed via the Bcrypt algorithm
+(for more information, see <a href="#adding-users">Local Authentication - Adding users</a> ) .</li>
+</ul>
+
+<p>A sample actors file may look like this:</p>
+
+<pre><code class="language-yaml">clients:
+  - name: Test Client
+    clientId: test
+    clientSecret: &quot;{plain}test&quot;
+    allowedScopes:
+      - scope.test.1
+      - scope.test.2
+    responseUri:
+      - http://example.com/cb
+    allowedGrants:
+      - token
+    consentNeeded: true
+  - name: Test Client 2
+    clientId: test2
+    clientSecret: &quot;{plain}test2&quot;
+    allowedScopes:
+      - scope.test.1
+      - scope.test.2
+    responseUri:
+      - http://example.com/cb
+    allowedGrants:
+      - token
+      - authorization_code
+      - refresh_token
+      - client_credentials
+      - password
+    consentNeeded: true
+    resourceOwnerAuthMethod: Local
+
+resourceServers:
+  - name: Test API
+    clientId: rs1
+    clientSecret: &quot;{plain}rs1&quot;
 </code></pre>
 
 <h2 id="session-configuration">Session configuration</h2>
 
-<p>The user session is configured in the <code>samlIdpConfiguration</code> section.</p>
+<p>The user session is configured in the <code>session</code> section.</p>
 
 <p>The session is stored in memory.</p>
 
-<p>This section is composed of 1 parameter (for now):</p>
+<p>This section is composed of 1 parameter:</p>
 
 <ul>
 <li><code>duration</code>: Period in minutes of user inactivity after which the session will be destroyed.</li>
 </ul>
 
-<h3 id="sample-configuration-3">Sample configuration</h3>
+<h3 id="sample-configuration-5">Sample configuration</h3>
 
 <p>Here is a sample configuration for this section:</p>
 
-<pre><code class="language-yaml">sessionConfig:
+<pre><code class="language-yaml">session:
   duration: 120
 </code></pre>
 
 <h2 id="authentication-methods-configuration">Authentication methods configuration</h2>
 
-<p>The different authentication methods are configured in the <code>authMethodConfiguration</code> section.</p>
+<p>The different authentication methods are configured in the <code>authMethods</code> section.</p>
 
 <p>Ident.io server currently supports 5 authentication methods types out-of-the-box:</p>
 
@@ -360,25 +514,16 @@ This parameter has 4 possible valid values:
 <li><strong>X.509 Certificates</strong>: Authentication based on X.509 certificates. This method offers a powerful mean to analyse attributes</li>
 </ul>
 
-<div class="bs-callout bs-callout-info">
-  <h4>Authentication methods naming</h4>
-  <p>Each authentication method starts with an anchor (name prefixed with <code>&amp;</code>), in order to be used as a reference
-elsewhere in the configuration.</p>
-
-</div>
-
-
 <h3 id="local-authentication">Local authentication</h3>
 
-<p>The Local authentication methods are configured in the <code>localAuthMethods</code> section.</p>
+<p>The Local authentication methods are configured in the <code>local</code> section.</p>
 
 <p>The following options can be set:</p>
 
 <ul>
 <li><code>name</code>: Display name of the authentication method.</li>
-<li><code>authLevel</code>: A reference to a authentication level declared in a previous section.
-It must start with a <code>*</code> character (denoting a reference in YAML)</li>
-<li><code>userFilePath</code>: Path to the YAML file containing the users definitions (default: <code>users.yml</code> in the config directory)</li>
+<li><code>authLevel</code>: The name of an authentication level declared in a previous section.</li>
+<li><code>userFilePath</code>: Path to the YAML file containing the users definitions (default: <code>config/users.yml</code>)</li>
 </ul>
 
 <h4 id="adding-users">Adding users</h4>
@@ -390,11 +535,21 @@ It must start with a <code>*</code> character (denoting a reference in YAML)</li
 <li><code>password</code>: Password of the user. It can be either in plaintext or hashed via the Bcrypt algorithm.</li>
 </ul>
 
+<p>Plain-text passwords are prefixed by the <code>{plain}</code> keyword, Bcrypt passwords by <code>{bcrypt}</code>.</p>
+
+<div class="bs-callout bs-callout-warning">
+  <h4>Warning</h4>
+  
+Don't forget to put the password between quotes, as the '{' character would be interpreted by the configuration parser.
+
+</div>
+
+
 <p>You can use the <code>password-generator</code> utility in the <code>bin</code> directory to generate a BCrypt hashed password.</p>
 
 <p>On UNIX systems:</p>
 
-<pre><code class="language-sh">$ bin\password-generator
+<pre><code class="language-sh">$ bin/password-generator
 </code></pre>
 
 <p>On Windows systems:</p>
@@ -402,20 +557,19 @@ It must start with a <code>*</code> character (denoting a reference in YAML)</li
 <pre><code class="language-sh">$ bin\password-generator.bat
 </code></pre>
 
-<h4 id="sample-configuration-4">Sample configuration</h4>
+<h4 id="sample-configuration-6">Sample configuration</h4>
 
 <p>Here is a sample configuration for this section:</p>
 
 <pre><code class="language-yaml">localAuthMethods:
-  - &amp;local
-    name: Local
-    authLevel: *medium
+  - name: Local
+    authLevel: medium
     userFilePath: /opt/identio/config/users.yml
 </code></pre>
 
 <h3 id="ldap-authentication">LDAP authentication</h3>
 
-<p>The LDAP authentication methods are configured in the <code>ldapAuthMethods</code> section.</p>
+<p>The LDAP authentication methods are configured in the <code>ldap</code> section.</p>
 
 <h4 id="common-configuration-options">Common configuration options</h4>
 
@@ -423,8 +577,7 @@ It must start with a <code>*</code> character (denoting a reference in YAML)</li
 
 <ul>
 <li><code>name</code>: Display name of the authentication method.</li>
-<li><code>authLevel</code>: A reference to a authentication level declared in a previous section.
-It must start with a <code>*</code> character (denoting a reference in YAML)</li>
+<li><code>authLevel</code>: The name of an authentication level declared in a previous section.</li>
 <li><code>baseDn</code>: Base DN of the LDAP directory.</li>
 <li><code>ldapUrl</code>: A list containing the LDAP servers URLs. The hosts will
 be tried successively in case of a timeout or error.</li>
@@ -456,36 +609,35 @@ The value <code>-1</code> should be used if you don&rsquo;t want to close idle c
 <li><code>timeBetweenEvictionRuns</code>: Time in second between two connection validation runs.</li>
 </ul>
 
-<h4 id="sample-configuration-5">Sample configuration</h4>
+<h4 id="sample-configuration-7">Sample configuration</h4>
 
 <p>Here is a sample configuration for this section:</p>
 
-<pre><code class="language-yaml">ldapAuthMethods:
-- &amp;corpLDAP
-    name: Corporate LDAP
-    authLevel: *medium
-    baseDn: c=identio
-    ldapUrl:
-      - ldaps://myldap1:636
-      - ldaps://myldap2:636
-    proxyUser: cn=proxyUser,ou=applications,c=identio
-    proxyPassword: $5hG!s2Am9&amp;#
-    trustCert: /opt/identio/config/ldap-trust-ca.crt
-    userSearchFilter: (&amp;(objectclass=person)(cn=#UID))
-    poolConfig:
-      maxIdleConnections: 8
-      minEvictableIdleTime: -1
-      minIdleConnections: 4
-      numTestsPerEvictionRun: 4
-      testOnBorrow: true
-      testRequestFilter: (objectclass=*)
-      testWhileIdle: true
-      timeBetweenEvictionRuns: 60
+<pre><code class="language-yaml">ldap:
+- name: Corporate LDAP
+  authLevel: *medium
+  baseDn: c=identio
+  ldapUrl:
+    - ldaps://myldap1:636
+    - ldaps://myldap2:636
+  proxyUser: cn=proxyUser,ou=applications,c=identio
+  proxyPassword: $5hG!s2Am9&amp;#
+  trustCert: /opt/identio/config/ldap-trust-ca.crt
+  userSearchFilter: (&amp;(objectclass=person)(cn=#UID))
+  poolConfig:
+    maxIdleConnections: 8
+    minEvictableIdleTime: -1
+    minIdleConnections: 4
+    numTestsPerEvictionRun: 4
+    testOnBorrow: true
+    testRequestFilter: (objectclass=*)
+    testWhileIdle: true
+    timeBetweenEvictionRuns: 60
 </code></pre>
 
 <h3 id="radius-authentication">Radius authentication</h3>
 
-<p>The Radius authentication methods are configured in the <code>radiusAuthMethods</code> section.
+<p>The Radius authentication methods are configured in the <code>radius</code> section.
 This authentication method supports the specific challenges sent by the RSA SecurID®
 Radius server.</p>
 
@@ -495,8 +647,7 @@ Radius server.</p>
 
 <ul>
 <li><code>name</code>: Display name of the authentication method.</li>
-<li><code>authLevel</code>: A reference to a authentication level declared in a previous section.
-It must start with a <code>*</code> character (denoting a reference in YAML)</li>
+<li><code>authLevel</code>: The name of an authentication level declared in a previous section.</li>
 <li><code>authPort</code>: Port of the Radius authentication service.</li>
 <li><code>accountPort</code>: Port of the Radius accounting service.</li>
 <li><code>radiusHost</code>: A list containing the radius server hostnames. The hosts will
@@ -505,13 +656,12 @@ be tried successively in case of a timeout.</li>
 <li><code>timeout</code>: Time in milliseconds to wait for a response of the Radius server.</li>
 </ul>
 
-<h4 id="sample-configuration-6">Sample configuration</h4>
+<h4 id="sample-configuration-8">Sample configuration</h4>
 
 <p>Here is a sample configuration for this section:</p>
 
-<pre><code class="language-yaml">radiusAuthMethods:
-  - &amp;securID
-    name: SecurID
+<pre><code class="language-yaml">radius:
+  - name: SecurID
     authLevel: *strong
     authPort: 1812
     accountPort: 1813
@@ -524,7 +674,7 @@ be tried successively in case of a timeout.</li>
 
 <h3 id="saml-authentication-identity-provider-proxying">SAML authentication: Identity Provider Proxying</h3>
 
-<p>The SAML authentication methods are configured in the <code>samlAuthMethods</code> section.
+<p>The SAML authentication methods are configured in the <code>saml</code> section.
 This section is a list, you can include multiple authentication methods, if you want
 to delegate authentication to multiple Identity Providers.</p>
 
@@ -561,8 +711,8 @@ authentication levels.</p>
 <p>An example configuration could be:</p>
 
 <pre><code class="language-yaml">out:
-  *strong: urn:oasis:names:tc:SAML:2.0:ac:classes:MobileTwoFactorContract
-  *medium: urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport
+  strong: urn:oasis:names:tc:SAML:2.0:ac:classes:MobileTwoFactorContract
+  medium: urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport
 </code></pre>
 
 <p>This configuration means that this remote Identity Provider will appear on the logon
@@ -590,40 +740,38 @@ An unknown authentication context in a response will result in the response bein
 <p>An example configuration could be:</p>
 
 <pre><code class="language-yaml">in:
-  urn:oasis:names:tc:SAML:2.0:ac:classes:MobileTwoFactorContract: *strong
-  urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport: *medium
+  urn:oasis:names:tc:SAML:2.0:ac:classes:MobileTwoFactorContract: strong
+  urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport: medium
 </code></pre>
 
 <p>This configuration means that a response sporting <code>urn:oasis:names:tc:SAML:2.0:ac:classes:MobileTwoFactorContract</code>
-authentication context will be map to a <code>strong</code> authentication level (note the <code>*</code> character denoting a reference
-to an internal authentication level).
+authentication context will be map to a <code>strong</code> authentication level.
 Similarly, a response sporting <code>urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport</code>
 authentication context will be map to a <code>medium</code> authentication level.</p>
 
-<h4 id="sample-configuration-7">Sample configuration</h4>
+<h4 id="sample-configuration-9">Sample configuration</h4>
 
 <p>Here is a sample configuration for this section:</p>
 
 <pre><code class="language-yaml">samlAuthMethods:
-  - &amp;remoteIDP
-    name: Remote Identity Provider
+  - name: Remote Identity Provider
     certificateCheckEnabled: false
     logoFileName: /opt/identio/config/trusted-idp/remote-idp.jpg
     metadata: /opt/identio/config/trusted-idp/remote-idp.xml
     samlAuthMap:
       in:
-        urn:oasis:names:tc:SAML:2.0:ac:classes:MobileTwoFactorContract: *strong
-        urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport: *medium
+        urn:oasis:names:tc:SAML:2.0:ac:classes:MobileTwoFactorContract: strong
+        urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport: medium
       out:
-        *strong: urn:oasis:names:tc:SAML:2.0:ac:classes:MobileTwoFactorContract
-        *very-weak: urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport
-        *medium: urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport
-        *weak: urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport
+        strong: urn:oasis:names:tc:SAML:2.0:ac:classes:MobileTwoFactorContract
+        very-weak: urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport
+        medium: urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport
+        weak: urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport
 </code></pre>
 
 <h3 id="x-509-certificate-authentication">X.509 Certificate authentication</h3>
 
-<p>The X.509 authentication methods are configured in the <code>x509AuthMethods</code> section.
+<p>The X.509 authentication methods are configured in the <code>x509</code> section.
 This section is a list, you can include multiple authentication methods
 (for example, one for software certificates and one for certificates embedded in a smartcard
 or if you want to handle several client certificate authorities).
@@ -636,8 +784,7 @@ be checked before displaying the login screen.</p>
 
 <ul>
 <li><code>name</code>: Display name of the authentication method.</li>
-<li><code>authLevel</code>: A reference to a authentication level declared in a previous section.
-It must start with a <code>*</code> character (denoting a reference in YAML)</li>
+<li><code>authLevel</code>: The name of an authentication level declared in a previous section.</li>
 <li><code>clientCertTrust</code>: The path to the client Certificate Autority that will be used
 to validate the end-user certificate.</li>
 </ul>
@@ -732,10 +879,9 @@ a <a href="http://docs.spring.io/spring/docs/current/spring-framework-reference/
 
 <p>Here is a sample configuration of a native X.509 certificate authentication method:</p>
 
-<pre><code class="language-yaml">x509AuthMethods:
-- &amp;softCert
-  name: Soft Certificate
-  authLevel: *medium
+<pre><code class="language-yaml">x509:
+- name: Soft Certificate
+  authLevel: medium
   security: native
   clientCertTrust: /opt/identio/config/client-ca.crt
   conditionExpression: !getExtendedKeyUsage().contains('1.3.6.1.4.1.311.20.2.2') and getExtendedKeyUsage().contains('1.3.6.1.5.5.7.3.2')
@@ -744,10 +890,9 @@ a <a href="http://docs.spring.io/spring/docs/current/spring-framework-reference/
 
 <p>The same configuration, but with an Apache reverse proxy handling the SSL endpoint, configured with a shared secret:</p>
 
-<pre><code class="language-yaml">x509AuthMethods:
-- &amp;softCert
-  name: Soft Certificate
-  authLevel: *medium
+<pre><code class="language-yaml">x509:
+- name: Soft Certificate
+  authLevel: medium
   security: shared-secret
   apacheFix: true
   certHeaderName: User-Cert
@@ -761,10 +906,9 @@ a <a href="http://docs.spring.io/spring/docs/current/spring-framework-reference/
 <p>Again, the same configuration, but with an Apache reverse proxy handling the SSL endpoint,
 authenticated through SSL:</p>
 
-<pre><code class="language-yaml">x509AuthMethods:
-- &amp;softCert
-  name: Soft Certificate
-  authLevel: *medium
+<pre><code class="language-yaml">x509:
+- name: Soft Certificate
+  authLevel: medium
   security: ssl
   apacheFix: true
   proxyCertTrust: /opt/identio/config/proxy-ca.crt
@@ -773,6 +917,37 @@ authenticated through SSL:</p>
   clientCertTrust: /opt/identio/config/client-ca.crt
   conditionExpression: !getExtendedKeyUsage().contains('1.3.6.1.4.1.311.20.2.2') and getExtendedKeyUsage().contains('1.3.6.1.5.5.7.3.2')
   uidExpression: getSubjectAlternativeNames()[2][1]
+</code></pre>
+
+<h2 id="data-sources-configuration">Data sources configuration</h2>
+
+<p>Data sources of the application are defined in the <code>data</code> section.</p>
+
+<p>The <code>datasources</code> sub-section contains a list of all declared data sources in the application.</p>
+
+<p>Each data source has the following properties:</p>
+
+<ul>
+<li><code>name</code>: Name of the data source</li>
+<li><code>type</code>: Type of the data source. The only valid value for now is <code>jdbc</code>.</li>
+<li><code>driver</code>: Name of the driver to use for this data source.</li>
+<li><code>url</code>: Url to connect to the data source.</li>
+<li><code>username</code>: Username of the technical account to connect to the data source.</li>
+<li><code>password</code>: Corresponding password.</li>
+</ul>
+
+<h3 id="sample-configuration-10">Sample configuration</h3>
+
+<p>Here is a sample configuration for this section:</p>
+
+<pre><code class="language-yaml">data:
+  dataSources:
+    - name: Local
+      type: jdbc
+      driver: org.h2.Driver
+      url: jdbc:h2:mem:db;DB_CLOSE_DELAY=-1
+      username: sa
+      password: sa
 </code></pre>
 
    </div>

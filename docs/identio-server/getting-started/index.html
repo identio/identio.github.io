@@ -58,11 +58,13 @@
 <ul>
 
   
-  
 
-  <li>
     
-        
+
+    <li>
+
+    
+      
 
 
 <a  title="Introduction" href="https://identio.github.io/docs/identio-server/">
@@ -70,14 +72,16 @@
 	Introduction
 </a>
 
-      
-  </li>
-
+    
+    </li>
   
 
-  <li>
     
-        
+
+    <li>
+
+    
+      
 
 
 <a class="current" title="Getting started" href="https://identio.github.io/docs/identio-server/getting-started/">
@@ -85,24 +89,43 @@
 	Getting started
 </a>
 
-      
-  </li>
-
+    
+    </li>
   
 
-  <li>
     
-        
+
+    <li>
+
+    
+      
 
 
-<a  title="Reference documentation" href="https://identio.github.io/docs/identio-server/reference/">
+<a  title="Launch parameters" href="https://identio.github.io/docs/identio-server/launch-parameters/">
 	
-	Reference documentation
+	Launch parameters
 </a>
 
-      
-  </li>
+    
+    </li>
+  
 
+    
+
+    <li>
+
+    
+      
+
+
+<a  title="Configuration reference" href="https://identio.github.io/docs/identio-server/reference/">
+	
+	Configuration reference
+</a>
+
+    
+    </li>
+  
 
 </ul>
 
@@ -113,7 +136,7 @@
 
 <h1 id="getting-started">Getting started</h1>
 
-<p>This page will guide you through the installation process of a simple Identity Provider.</p>
+<p>This page will guide you through the installation process of a simple instance.</p>
 
 <div class="bs-callout bs-callout-warning">
   <h4>Warning</h4>
@@ -139,39 +162,58 @@ and unzip the content on the filesystem.</p>
 
 <h3 id="prepare-the-environment">Prepare the environment</h3>
 
-<p>Edit the configuration file <code>identio-config.yml</code> that can be found in the <code>config</code> directory and set
+<p>Edit the configuration file <code>identio.yml</code> that can be found in the <code>config</code> directory and set
 the public hostname of your machine:</p>
 
-<pre><code class="language-yaml">globalConfiguration:
-  publicFqdn: http://&lt;your_hostname&gt;:10080
+<pre><code class="language-yaml">global:
+  basePublicUrl: http://&lt;your_hostname&gt;:10080
 </code></pre>
+
+<h3 id="declare-a-saml-client">Declare a SAML client</h3>
+
+<h4 id="fetch-the-idp-metadata">Fetch the IDP metadata</h4>
+
+<p>The metadata of the Identity Provider can be fetched by accessing the URL <code>http://&lt;your_hostname&gt;:10080/SAML2</code></p>
+
+<h4 id="copy-the-service-provider-metadata">Copy the Service Provider Metadata</h4>
+
+<p>To configure a Service Provider, just copy the metadata of your Service Provider in the <code>config/trusted-sp</code> folder.
+Ident.io server periodically scans for new metadatas in this directory and will automatically load the file.</p>
+
+<h3 id="declare-a-oauth-client-and-resource-server">Declare a OAuth client and resource server</h3>
+
+<h4 id="configure-the-oauth-server">Configure the OAuth server</h4>
+
+<p>The configuration file <code>oauth-actors.yml</code> that can be found in the <code>config</code> directory is configured with a test client
+and a test resource server. Just edit the <code>responseUri</code> parameter of the client to match the callback url of your client.</p>
+
+<h4 id="configure-your-client">Configure your client</h4>
+
+<p>Ident.io publishes the following endpoints for clients and resource servers:</p>
+
+<ul>
+<li><code>/oauth/authorize</code>: Authorization endpoint</li>
+<li><code>/oauth/token</code>: Token endpoint</li>
+<li><code>/oauth/introspect</code>: Introspection endpoint for resource servers</li>
+</ul>
 
 <h3 id="start-the-server">Start the server</h3>
 
 <p>On UNIX systems:</p>
 
-<pre><code class="language-sh">bin/identio-server --identio.config=config/identio-config.yml
+<pre><code class="language-sh">bin/identio-server --identio.config=config
 </code></pre>
 
 <p>On Windows systems:</p>
 
-<pre><code class="language-sh">bin/identio-server.bat --identio.config=config\identio-config.yml
+<pre><code class="language-sh">bin/identio-server.bat --identio.config=config
 </code></pre>
 
 <p>This will start a HTTP server listening on port 10080.</p>
 
-<h3 id="fetch-the-idp-metadata">Fetch the IDP metadata</h3>
-
-<p>The metadata of the Identity Provider can be fetched by accessing the URL <code>http://&lt;your_hostname&gt;:10080/SAML2</code></p>
-
-<h3 id="copy-the-service-provider-metadata">Copy the Service Provider Metadata</h3>
-
-<p>To configure a Service Provider, just copy the metadata of your Service Provider in the <code>config/trusted-sp</code> folder.
-Ident.io server periodically scans for new metadatas in this directory and will automatically load the file.</p>
-
 <h3 id="test-the-setup">Test the setup</h3>
 
-<p>Access your Service Provider and you should be redirected to Ident.io server.
+<p>Access your Service Provider or client application and you should be redirected to Ident.io server.
 The sample configuration uses a local authentication file containing one test user.
 The login and password are <code>johndoe</code> / <code>password</code>.</p>
 
