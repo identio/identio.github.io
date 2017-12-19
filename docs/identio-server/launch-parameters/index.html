@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="https://identio.github.io/img/logo-small.png">
+
+    <title>Ident.io</title>
+
+    
+    <link href="https://identio.github.io/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://identio.github.io/css/bootstrap-callout.css" rel="stylesheet">
+    <link href="https://identio.github.io/css/highlightjs/default.min.css" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://identio.github.io/css/toc.css">
+    <link href="https://identio.github.io/css/identio.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://identio.github.io/css/font-awesome.min.css">
+    
+    
+  </head>
+
+<body data-spy="scroll" data-target="#toc">
+      <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="https://identio.github.io/"><img alt="Brand" src="https://identio.github.io/img/logo-small.png" ></a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <p class="navbar-text navbar-right">
+            <a href="https://github.com/identio" class="navbar-link">
+              <i class="fa fa-github"></i>
+              Github
+            </a>
+          </p>
+
+        </div>
+      </div>
+    </nav>
+
+    
+<div class="container-fluid main-content">
+  <div class="row">
+    <div class="col-sm-3 col-lg-2">
+      <div class="menu" data-spy="affix" data-offset-top="0" data-offset-bottom="-100">
+        
+
+<ul>
+
+  
+
+    
+
+    <li>
+
+    
+      
+
+
+<a  title="Introduction" href="https://identio.github.io/docs/identio-server/">
+	
+	Introduction
+</a>
+
+    
+    </li>
+  
+
+    
+
+    <li>
+
+    
+      
+
+
+<a  title="Getting started" href="https://identio.github.io/docs/identio-server/getting-started/">
+	
+	Getting started
+</a>
+
+    
+    </li>
+  
+
+    
+
+    <li>
+
+    
+      
+
+
+<a class="current" title="Launch parameters" href="https://identio.github.io/docs/identio-server/launch-parameters/">
+	
+	Launch parameters
+</a>
+
+    
+    </li>
+  
+
+    
+
+    <li>
+
+    
+      
+
+
+<a  title="Configuration reference" href="https://identio.github.io/docs/identio-server/reference/">
+	
+	Configuration reference
+</a>
+
+    
+    </li>
+  
+
+</ul>
+
+      </div>
+    </div>
+    <div class="col-sm-9 col-lg-8">
+      
+
+<h1 id="launch-parameters">Launch parameters</h1>
+
+<p>This page will guide you through the different launch parameters of the server.</p>
+
+<h2 id="specifying-launch-parameters">Specifying launch parameters</h2>
+
+<p>The launch parameters described in the following sections can only be provided
+as launch parameters of the server or as system environment variables.
+They can&rsquo;t be stored in a remote backend.</p>
+
+<p>Example usage of the <code>identio.config</code> parameter on UNIX systems:</p>
+
+<pre><code class="language-sh">bin/identio-server --identio.config=config
+</code></pre>
+
+<p>or, alternatively:</p>
+
+<pre><code>export identio.config=config
+bin/identio-server
+</code></pre>
+
+<p>Same example on Windows systems:</p>
+
+<pre><code class="language-sh">bin/identio-server.bat --identio.config=config
+</code></pre>
+
+<p>or, alternatively:</p>
+
+<pre><code>set identio.config=config
+bin/identio-server
+</code></pre>
+
+<h2 id="defining-a-work-directory">Defining a work directory</h2>
+
+<p>Ident.io server generates temporary files on startup. By default, those files are written in
+the <code>config/work</code> directory.</p>
+
+<p>If you want to change this default, you can specify it with the following parameter:</p>
+
+<ul>
+<li><code>identio.work.directory</code>: Path to the work directory.</li>
+</ul>
+
+<h2 id="configuration">Configuration</h2>
+
+<h3 id="choose-a-configuration-backend">Choose a configuration backend</h3>
+
+<p>Ident.io supports the following configuration backends out of the box:</p>
+
+<ul>
+<li>Local filesystem</li>
+<li>Git repository</li>
+<li>Hashicorp Vault</li>
+<li>Spring Cloud Config Server</li>
+<li>System environment variables (useful in a container deployment)</li>
+</ul>
+
+<p>You can store your configuration in one of those backends or use a combination.
+For example, in a typical cloud deployment, the main part of the configuration may
+be stored in a Git and all configuration passwords may be in a Vault Server or in
+system environment variables.</p>
+
+<h3 id="configuration-from-the-local-filesystem">Configuration from the local filesystem</h3>
+
+<p>The local filesystem configuration backend is based on a YAML file, which must
+be named <code>identio.yml</code>.</p>
+
+<p>The configuration is specified through the following launch parameters:</p>
+
+<ul>
+<li><code>identio.config</code>: Path to the directory hosting the <code>identio.yml</code> file.</li>
+</ul>
+
+<h3 id="configuration-from-a-git-repository">Configuration from a Git repository</h3>
+
+<p>The Git configuration backend is based on a YAML file, which must
+be named <code>identio.yml</code> and stored at the root of a git repository.</p>
+
+<p>The configuration is specified through the following launch parameter:</p>
+
+<ul>
+<li><code>identio.config.git.uri</code>: Url of the Git repository. It can be a HTTPS, Git or SSH URL.</li>
+<li><code>identio.config.git.username</code>: Username to use to connect to the Git repository, if authentication
+is required.</li>
+<li><code>identio.config.git.password</code>: Corresponding password.</li>
+</ul>
+
+<div class="bs-callout bs-callout-info">
+  <h4>Note</h4>
+  
+The repository will be cloned in the work directory on startup.
+
+</div>
+
+
+<h3 id="configuration-from-a-vault-repository">Configuration from a Vault repository</h3>
+
+<p>The Vault configuration backend is based on a repository stored in Vault.
+Parameters must be prefixed in Vault by <code>identio/</code>.</p>
+
+<div class="bs-callout bs-callout-info">
+  <h4>Note</h4>
+  
+Ident.io Server only supports the APPROLE authentication scheme.
+
+</div>
+
+
+<p>The configuration is specified through the following launch parameters:</p>
+
+<ul>
+<li><code>identio.config.vault.uri</code>: Url of the Vault repository. (e.g.: <a href="https://vaultserver:8200">https://vaultserver:8200</a>)</li>
+<li><code>identio.config.vault.role-id</code>: Role identifier of the service in vault.</li>
+<li><code>identio.config.vault.secret-id</code>: Secret identifier of the application.</li>
+<li><code>identio.config.vault.trust.path</code>: Path to the certificate authority used to validate
+connection to vault through SSL.</li>
+</ul>
+
+<h3 id="configuration-from-a-spring-cloud-config-server">Configuration from a Spring Cloud Config server</h3>
+
+<p>The Spring Cloud Config server configuration backend is based on a repository stored
+in Spring Cloud Config server.</p>
+
+<p>The configuration is specified through the following launch parameters:</p>
+
+<ul>
+<li><code>identio.config.server.uri</code>: Url of the Vault repository.</li>
+<li><code>identio.config.server.username</code>: Username to use to connect to the Config server, if authentication
+is required.</li>
+<li><code>identio.config.server.password</code>: Corresponding password.</li>
+</ul>
+
+   </div>
+    <div class="col-lg-2">
+      <div class="menu toc" id="toc" data-spy="affix" data-offset-top="0" data-offset-bottom="-100">
+        <nav id="toc" data-toggle="toc"></nav>
+
+      </div>
+    </div>
+  </div>
+
+</div> 
+
+<footer>
+  <p>&copy; 2016 Ident.io</p>
+</footer>
+
+
+
+<script src="https://identio.github.io/js/jquery.min.js"></script>
+<script src="https://identio.github.io/js/bootstrap.min.js"></script>
+
+<script src="https://identio.github.io/js/ie10-viewport-bug-workaround.js"></script>
+<script src="https://identio.github.io/js/highlightjs/highlight.min.js"></script>
+<script src="https://identio.github.io/js/highlightjs/yaml.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+<script src="https://identio.github.io/js/bootstrap-toc.min.js"></script>
+</body>
+</html>
+
